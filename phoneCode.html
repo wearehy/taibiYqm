@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" style="font-size: 399.2px;">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="format-detection" content="telephone=yes">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title>选择国家跟地区</title>
+    <link href="./phoneCodehtml_files/index.css" rel="stylesheet">
+
+    <script charset="utf-8" src="./phoneCodehtml_files/2828.d00259a59138b8c26c47.js"></script>
+    <script charset="utf-8" src="./phoneCodehtml_files/2727.b6b05776316ddb2aa385.js"></script>
+    <script type="text/javascript" src="./phoneCodehtml_files/vendor30.ec672fe0778cd65e9f7e.js"></script>
+    <script type="text/javascript" src="./phoneCodehtml_files/index.04fd79c.js"></script>
+    <style>
+        .disNone {
+            display: none!important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-view">
+        <article class="ys-address-view">
+            <article class="ks-header-ui" style="display: none;"><i class="icon-back"></i> 选择国家跟地区
+            </article>
+            <header class="head-box">
+                <span class="back"><i></i></span>
+                <span id="check">选择国家跟地区</span>
+            </header>
+            <div class="search-box">
+                <input id="search" type="text" placeholder="搜索">
+            </div>
+            <ul class="address-box">
+
+            </ul>
+        </article>
+    </div>
+    <script src="./js/common.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="./js/cn.js"></script>
+    <script src="./js/en.js"></script>
+    <script>
+        $(document).ready(function() {
+            var lan = 'en';
+            lan = JSON.parse(window.localStorage.getItem('lan'));
+
+            if (lan == 'en') {
+                $('#check').html('Select country / region')
+                $('#search').attr('placeholder', 'Select country / region')
+            } else if (lan == 'cn') {
+                $('#check').html('选择国家跟地区')
+                $('#search').attr('placeholder', '搜索')
+            }
+
+            let data = [];
+            if (lan == 'en') {
+                data = enData
+            } else if (lan == 'cn') {
+                data = cnData
+            }
+            let len = data.length;
+            var html = '';
+            for (let i = 0; i < len; i++) {
+                html += "<li>";
+                html += "<span class = 'txt' >" + data[i].name + "</span>";
+                html += "<span class = 'num' >" + data[i].code + "</span>";
+                html += "</ li >"
+            }
+            $('.address-box').html(html)
+
+
+            // 返回
+            $('.back').on('click', function() {
+                console.log(lan);
+                window.localStorage.setItem('phoneCode', JSON.stringify({
+                    area_code: '+86',
+                    lan: lan
+                }))
+
+                self.location.href = "./index.html";
+            })
+
+            // 选中
+            $('.address-box').on('click', 'li', function() {
+                var area_code = $(this).children('.num').html();
+                window.localStorage.setItem('phoneCode', JSON.stringify({
+                    area_code: area_code,
+                    lan: lan
+                }))
+                self.location.href = "./index.html"
+            })
+
+            // 搜索
+            $("#search").bind('input propertychange', function(e) {
+                console.log($(this).val())
+                var val = $(this).val()
+                $('.address-box li').removeClass('disNone')
+                $('.address-box li').each(function(i, e) {
+                    if ($(e).children('.txt').html().indexOf(val) == -1 && $(e).children('.num').html().indexOf(val) == -1) {
+                        $(e).addClass('disNone')
+                    }
+                })
+
+            })
+        })
+    </script>
+</body>
+
+</html>
